@@ -15,42 +15,27 @@ function resizeHandler(e: any) {
       : 0
   );
   const currentTop = Number(
-    main?.style.top
-      ? main?.style.top.slice(0, main?.style.top.length - 2)
-      : 0
+    main?.style.top ? main?.style.top.slice(0, main?.style.top.length - 2) : 0
   );
-  
-  if (direction.includes(DirectionState.LEFT)) {
-    const width = main!.clientWidth;
-    document.onmousemove = function (e) {
-      const [endX, endY] = [e.clientX, e.clientY];
+  const width = main!.clientWidth;
+  const height = main!.clientHeight;
+  document.onmousemove = function (e) {
+    const [endX, endY] = [e.clientX, e.clientY];
+    if (direction.includes(DirectionState.LEFT)) {
       main && (main.style.left = `${currentLeft + endX - startX}` + "px");
       main && (main.style.width = `${width - (endX - startX) - 40}` + "px");
-    };
-  } 
-   if(direction.includes(DirectionState.RIGHT)){
-    const width = main!.clientWidth;
-    document.onmousemove = function (e) {
-      const [endX, endY] = [e.clientX, e.clientY];
+    }
+    if (direction.includes(DirectionState.RIGHT)) {
       main && (main.style.width = `${width + (endX - startX) - 40}` + "px");
-    };
-  } 
-   if (direction.includes(DirectionState.TOP)){
-    const height = main!.clientHeight;
-    document.onmousemove = function (e) {
-      const [endX, endY] = [e.clientX, e.clientY];
-      console.log(currentTop, endY, startY,`${currentTop + endY - startY}` + "px");
+    }
+    if (direction.includes(DirectionState.TOP)) {
       main && (main.style.top = `${currentTop + endY - startY}` + "px");
       main && (main.style.height = `${height - (endY - startY) - 40}` + "px");
-    };
-  } 
-   if(direction.includes(DirectionState.BOTTOM)){
-    const height = main!.clientHeight;
-    document.onmousemove = function (e) {
-      const [endX, endY] = [e.clientX, e.clientY];
+    }
+    if (direction.includes(DirectionState.BOTTOM)) {
       main && (main.style.height = `${height + (endY - startY) - 40}` + "px");
-    };
-  }
+    }
+  };
 
   document.onmouseup = function (e) {
     document.onmousemove = null;

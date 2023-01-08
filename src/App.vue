@@ -3,7 +3,9 @@ import DragTextarea from './components/DragTextarea.vue'
 </script>
 
 <template>
-  <DragTextarea :drag-pos="true"/>
+  <DragTextarea :drag-pos="true">
+    我是跟随盒子宽度变化的font-size的文字
+  </DragTextarea>
 </template>
 
 <style>

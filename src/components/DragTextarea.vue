@@ -122,7 +122,7 @@ function reposHandler(e: any) {
         class="d-slider__move"
         @mousedown="reposHandler"
       ></span>
-      <p>111</p>
+      <p><slot/></p>
     </div>
   </div>
 </template>

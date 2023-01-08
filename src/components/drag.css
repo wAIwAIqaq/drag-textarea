@@ -131,7 +131,8 @@
   width: 10px;
   height: 10px;
   left: 50%;
-  transform: all 0.2s ease, translateX(-50%);
+  transform: translateX(-50%);
+  transition: all 0.2s ease;
   border-radius: 50%;
   background: transparent;
   bottom: -20px;

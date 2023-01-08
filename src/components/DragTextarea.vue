@@ -1,40 +1,70 @@
 <script setup lang="ts">
 import { DirectionState } from "./enums";
+import { defineProps } from "vue";
+const props = defineProps(["dragPos"]);
+const { dragPos } = props;
 function resizeHandler(e: any) {
-  //   const resize = <any>e.target;
-  //   const left = e.target.parentNode;
-  //   // var lfex = document.getElementsByClassName("mid");
-  //   const box = e.target?.parentNode.parentNode;
-  //   const right = box.children[1];
-  //   // 鼠标按下事件
-  //   resize.onmousedown = function (e: any) {
-  //     const startX = e.clientX;
-  //     resize.left = resize.offsetLeft;
-  //     document.onmousemove = function (e) {
-  //       const endX = e.clientX;
-  //       console.log(startX, endX);
-  //       const flexRatio = (resize.left + (endX - startX)) / (right.clientWidth);
-  //       if(flexRatio > 2 || flexRatio < 0.5) return;
-  //       left.style.flex = flexRatio;
-  //     };
-  //     document.onmouseup = function (e) {
-  //       document.onmousemove = null;
-  //       document.onmouseup = null;
-  //       resize.releaseCapture && resize.releaseCapture();
-  //     };
-  //     resize.setCapture && resize.setCapture();
-  //     return false;
-  //   };
   const direction = e.target.id;
   console.log(direction);
+  const slider = e.target;
+  const main = document.getElementById("main");
+  const [startX, startY] = [e.clientX, e.clientY];
+  const currentLeft = Number(
+    main?.style.left
+      ? main?.style.left.slice(0, main?.style.left.length - 2)
+      : 0
+  );
+  const width = main!.clientWidth;
+  console.log(width, main?.style);
+  const currentTop = Number(
+    main?.style.top ? main?.style.top.slice(0, main?.style.top.length - 2) : 0
+  );
+  document.onmousemove = function (e) {
+    const [endX, endY] = [e.clientX, e.clientY];
+    main && (main.style.left = `${currentLeft + endX - startX}` + "px");
+    main && (main.style.width = `${width - (endX - startX) - 40}` + "px");
+    console.log(`${width - (endX - startX)} + 'px'`);
+  };
+  document.onmouseup = function (e) {
+    document.onmousemove = null;
+    document.onmouseup = null;
+    slider.releaseCapture && slider.releaseCapture();
+  };
+  slider.setCapture && slider.setCapture();
+  return false;
 }
+
 function reposHandler(e: any) {
-  console.log(e.target);
+  if (!dragPos) return;
+  const icon = e.target;
+  const main = document.getElementById("main");
+  const [startX, startY] = [e.clientX, e.clientY];
+  const currentLeft = Number(
+    main?.style.left
+      ? main?.style.left.slice(0, main?.style.left.length - 2)
+      : 0
+  );
+  const currentTop = Number(
+    main?.style.top ? main?.style.top.slice(0, main?.style.top.length - 2) : 0
+  );
+  console.log(currentLeft, currentTop);
+  document.onmousemove = function (e) {
+    const [endX, endY] = [e.clientX, e.clientY];
+    main && (main.style.left = `${currentLeft + endX - startX}` + "px");
+    main && (main.style.top = `${currentTop + endY - startY}` + "px");
+  };
+  document.onmouseup = function (e) {
+    document.onmousemove = null;
+    document.onmouseup = null;
+    icon.releaseCapture && icon.releaseCapture();
+  };
+  icon.setCapture && icon.setCapture();
+  return false;
 }
 </script>
 <template>
-  <div class="d-container">
-    <div class="d-main">
+  <div class="d-container" :class="{ 'is-relative': dragPos }">
+    <div class="d-main" id="main">
       <div
         class="d-slider__top"
         :id="DirectionState.TOP"
@@ -75,7 +105,11 @@ function reposHandler(e: any) {
         :id="DirectionState.BOTTOM_LEFT"
         @mousedown="resizeHandler"
       />
-      <span class="d-slider__move" @mousedown="reposHandler"></span>
+      <span
+        v-if="dragPos"
+        class="d-slider__move"
+        @mousedown="reposHandler"
+      ></span>
       <p>111</p>
     </div>
   </div>
@@ -88,16 +122,15 @@ function reposHandler(e: any) {
   width: 200px;
   height: 200px;
   min-height: 200px;
-  margin: 10px;
-  border: 1px solid red;
-  border-radius: 5px;
 }
 .d-main {
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
+  container-type: inline-size;
+  margin: 10px;
+  width: 100%;
+  height: 100%;
+  border: 1px solid red;
+  border-radius: 5px;
   padding: 20px;
 }
 .d-slider__top,
@@ -192,5 +225,6 @@ function reposHandler(e: any) {
 }
 p {
   margin: 0;
+  font-size: calc(100cqw / 20);
 }
 </style>

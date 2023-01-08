@@ -3,7 +3,7 @@ import DragTextarea from './components/DragTextarea.vue'
 </script>
 
 <template>
-  <DragTextarea />
+  <DragTextarea :drag-pos="true"/>
 </template>
 
 <style>
